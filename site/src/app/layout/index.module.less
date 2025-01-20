@@ -1,0 +1,29 @@
+.main {
+  display: flex;
+  flex: 1;
+  background-color: var(--clr-main);
+  // height: 100vh; /* Make the layout take up the full viewport height */
+}
+
+.main > div {
+  display: flex;
+  height: 100%; /* Make the inner div take up the full height of .main */
+}
+
+.main > div > div:first-child {
+  width: 300px;
+}
+
+.main > div > div:nth-child(2) {
+  flex: 1;
+}
+
+.main > div > div:last-child {
+  width: 300px;
+}
+
+@media screen and (max-width: 768px) {
+  .main {
+    flex-direction: column;
+  }
+}

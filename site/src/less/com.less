@@ -1,0 +1,117 @@
+html {
+  font-size: 62.5%;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  position: relative;
+  background: #fff;
+  color: #333;
+  font-family: 'microsoft yahei', 'HiraKakuProN-W3', 'Meiryo', sans-serif;
+  margin: 0;
+  -webkit-text-size-adjust: 100%;
+
+  &.fixed {
+    position: fixed;
+  }
+}
+
+em {
+  font-style: normal;
+}
+
+a {
+  text-decoration: none;
+}
+
+i {
+  font-style: normal;
+}
+
+p {
+  margin: 0;
+}
+
+li {
+  list-style: none;
+}
+
+img {
+  // max-width: 100%;
+  // width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+
+.fb {
+  font-family: 'Lato', sans-serif;
+}
+
+.input {
+  height: 40px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: 1px solid #aaa;
+  background: #fff;
+  border-radius: 5px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.ant-table-tbody > tr:nth-child(even) {
+  background-color: #f5f5f5 !important;
+
+  & > .ant-table-cell-fix-left,
+  & > .ant-table-cell-fix-right {
+    background-color: #f5f5f5 !important;
+  }
+}
+
+.ant-table-thead > tr:first-child > th {
+  background-color: var(--clr-blue) !important;
+  color: #fff;
+
+  svg {
+    filter: brightness(0) invert(1);
+  }
+}
+
+.highcharts-credits {
+  display: none !important;
+}
+
+@keyframes stroke-dashoffset {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-size: 12px;
+  color: var(--clr-black);
+  background: var(--clr-back);
+  width: var(--sys-width);
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 768px) {
+  #root {
+    width: 100vw;
+  }
+}
+
+@primary-color: #038fde;

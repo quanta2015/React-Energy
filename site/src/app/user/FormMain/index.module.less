@@ -1,0 +1,89 @@
+.form {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, .3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+
+
+  .wrap {
+    position: relative;
+    width: 600px;
+    background: #fff;
+    border-radius: 5px;
+    padding: 20px;
+  }
+
+  .basic {
+    display: flex;
+    flex-direction: column;
+
+    .lt {
+      display: flex;
+      flex-direction: column;
+      width: 200px;
+
+      img {
+        width: 160px;
+        height: 160px;
+      }
+    }
+
+    .rt {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+
+  .head {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    width: 100%;
+
+    h1 {
+      font-size: 20px;
+      flex: 1;
+    }
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+
+    .row {
+      display: flex;
+      margin-bottom: 10px;
+
+      input:first-child {
+        width: 200px;
+        text-align: center;
+      }
+
+      input {
+        border: none;
+        border-bottom: 1px solid #ccc;
+        border-radius: 0;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .fun {
+    display: flex;
+    margin: 20px;
+    justify-content: center;
+    align-items: center;
+
+    button+button {
+      margin-left: 20px;
+    }
+  }
+}

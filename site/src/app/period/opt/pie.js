@@ -9,7 +9,7 @@ export const OptPie = (data, title) => ({
     text: title,
     align: 'center',
     verticalAlign: 'middle',
-    y: 80,
+    y: 20,
     style: {
       fontSize: '14px',
       color: 'white', 
@@ -22,26 +22,27 @@ export const OptPie = (data, title) => ({
   },
   tooltip: {
     style: {
-      fontSize: '14px',
+      fontSize: '12px',
     },
-    pointFormat: '<b style="color:#ff6600;">{point.percentage:.1f}%</b>',
+    pointFormat: '<b style="color:#666;">{point.percentage:.1f}%</b>',
   },
   plotOptions: {
     pie: {
       borderWidth: 0, 
       dataLabels: {
         enabled: true,
-        distance: 10,
+        distance: -15,
+        allowOverlap: true, // 允许标签重叠
         style: {
           fontWeight: 'bold',
           color: 'white',
           fontSize: '10px',
         },
       },
-      startAngle: -90,
-      endAngle: 90,
-      center: ['50%', '85%'],
-      size: '130%',
+      startAngle: 0,
+      endAngle: 360,
+      center: ['50%', '60%'],
+      size: '90%',
     },
   },
   xAxis: {

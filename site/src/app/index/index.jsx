@@ -76,7 +76,9 @@ const Index = () => {
     });
     client.on('message', (addr, msg) => saveData(msg, ret));
 
-    setInterval(() => {
+    
+
+    const interval = setInterval(() => {
       const filtered = ret.filter(item => item.code === code);
 
       filtered.map(o => {
@@ -106,6 +108,15 @@ const Index = () => {
       setEer1(formatNumber(_eer1));
       setEer2(formatNumber(_eer2));
     }, SAV_TIME);
+
+
+    return () => {
+      if (client) {
+        client.end(); // 断开 MQTT 连接
+        console.log('MQTT 连接已断开');
+      }
+      clearInterval(interval); // 清除定时器
+    };
   }, []);
 
   useEffect(() => {
@@ -299,29 +310,23 @@ const Index = () => {
             <div className={s.row}>
               <div className={s.col}>
                 <label>冷机功率</label>
-                <span>{data.chg_1_poa}</span>
+                <span data-unit="kw">{data.chg_1_poa}</span>
               </div>
-
+              <div className={s.col}>
+                <label>冷机1电流比</label>
+                <span data-unit="%">{data.ch_1_rlap}</span>
+              </div>
+              <div className={s.col}>
+                <label>冷机2电流比</label>
+                <span data-unit="%">{data.ch_2_rlap}</span>
+              </div>
               <div className={s.col}>
                 <label>冷却泵功率</label>
-                <span>{data.chpg_1_poa}</span>
+                <span data-unit="kw">{data.chpg_1_poa}</span>
               </div>
-              <div className={s.col}>
-                <label>冷却泵耗电</label>
-                <span>{data.chpg_1_ela}</span>
-              </div>
-
               <div className={s.col}>
                 <label>冷冻泵功率</label>
-                <span>{data.cwpg_1_poa}</span>
-              </div>
-              <div className={s.col}>
-                <label>冷冻泵耗电</label>
-                <span>{data.cwpg_1_ela}</span>
-              </div>
-              <div className={s.col}>
-                <label>冷却塔耗电</label>
-                <span>{data.ctg_1_ela}</span>
+                <span data-unit="kw">{data.cwpg_1_poa}</span>
               </div>
             </div>
           </div>
@@ -331,28 +336,23 @@ const Index = () => {
             <div className={s.row}>
               <div className={s.col}>
                 <label>冷机功率</label>
-                <span>{data.chg_2_poa}</span>
+                <span data-unit="kw">{data.chg_2_poa}</span>
               </div>
-
               <div className={s.col}>
                 <label>冷却泵功率</label>
-                <span>{data.chpg_2_poa}</span>
-              </div>
-              <div className={s.col}>
-                <label>冷却泵耗电</label>
-                <span>{data.chpg_2_ela}</span>
+                <span data-unit="kw">{data.chpg_2_poa}</span>
               </div>
               <div className={s.col}>
                 <label>冷冻泵功率</label>
-                <span>{data.cwpg_2_poa}</span>
+                <span data-unit="kw">{data.cwpg_2_poa}</span>
               </div>
               <div className={s.col}>
-                <label>冷冻泵耗电</label>
-                <span>{data.cwpg_2_ela}</span>
+                <label>冷机3电流比</label>
+                <span data-unit="kw">{data.ch_3_rlap}</span>
               </div>
               <div className={s.col}>
-                <label>冷却塔耗电</label>
-                <span>{data.ctg_2_ela}</span>
+                <label>冷机4电流比</label>
+                <span data-unit="kw">{data.ch_4_rlap}</span>
               </div>
             </div>
           </div>

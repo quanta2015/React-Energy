@@ -10,8 +10,9 @@
     padding-bottom: 10px;
 
     .lt,
+    .center,
     .rt {
-      flex: 1;
+      
       align-self: stretch;
       display: flex;
       flex-direction: column;
@@ -26,6 +27,40 @@
 
         & > div {
           flex: 1;
+        }
+      }
+    }
+
+    .center {
+      flex: 2!important;
+    }
+
+    .lt {
+      flex: 2!important;
+    }
+
+    .rt {
+      flex: 5!important;
+    }
+
+
+    .tab {
+      display: flex;
+
+      .sect {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-size: 14px;
+        gap: 10px;
+
+        img {
+          width: 48px;
+          height: auto;
+          // object-fit: cover;
         }
       }
     }

@@ -71,6 +71,39 @@ class Store {
     return await this.post(urls.API_QRY_ENERGY_SCREEN, params);
   }
 
+  async qryEnergySummary(params) {
+    return await this.post(urls.API_QRY_ENERGY_SUMMARY, params);
+  }
+
+  async qryEnergyHour(params) {
+    return await this.post(urls.API_QRY_ENERGY_HOUR, params);
+  }
+
+  async qryEnergyDay(params) {
+    return await this.post(urls.API_QRY_ENERGY_DAY, params);
+  }
+
+  async qryEnergyMonth(params) {
+    return await this.post(urls.API_QRY_ENERGY_MONTH, params);
+  }
+
+  
+
+  async qryEnergyDevHour(params) {
+    return await this.post(urls.API_QRY_ENERGY_DEV_HOUR, params);
+  }
+
+  async qryEnergyDevDay(params) {
+    return await this.post(urls.API_QRY_ENERGY_DEV_DAY, params);
+  }
+
+  async qryEnergyDevMonth(params) {
+    return await this.post(urls.API_QRY_ENERGY_DEV_MONTH, params);
+  }
+
+  
+  
+  
 
   async upload(params) {
     try {

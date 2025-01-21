@@ -1,236 +1,171 @@
 import React, { useEffect, useState } from 'react';
 import { inject, observer, MobXProviderContext } from 'mobx-react';
-import {
-  POS_ARROW,
-  POS_FM,
-  POS_CWP,
-  POS_CHP,
-  POS_CT,
-  POS_CH,
-  LABEL,
-  URL
-} from '@/constant/pos';
-import { loadUser } from '@/util/token';
-import { useNavigate } from 'react-router-dom';
-import { sensorDataToList, formatNumber } from '@/util/fn';
-import mqtt from 'mqtt';
-import {
-  serverUrl,
-  SAV_TIME,
-  SubRtg,
-  saveData,
-  cfList,
-  sortData,
-  groupData,
-  mergeData,
-  merge
-} from './mqtt';
-import Highcharts, { color } from 'highcharts';
+import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMore from 'highcharts/highcharts-more';
 import SolidGauge from 'highcharts/modules/solid-gauge';
-import { OptGauge } from './opt/gauge';
-import { OptPie } from './opt/pie';
-import { OptLineInit } from './opt/line';
+import { OptColumn } from './opt/column';
 
 import s from './index.module.less';
-
-import sysbg from '@/img/bg/sys-bg.avif';
 
 HighchartsMore(Highcharts);
 SolidGauge(Highcharts);
 
-var ret = [];
 
-const Index = () => {
+
+const clr_ch = '#cde064';
+const clr_chp = '#33e94d';
+const clr_cwp = '#605bea';
+const clr_ct = '#66c3f5';
+
+const Device = () => {
   const { store } = React.useContext(MobXProviderContext);
-  const navigate = useNavigate();
 
-  const columnOpt = title => ({
-    chart: {
-      type: 'column',
-      backgroundColor: 'transparent',
-      style: {
-        color: '#FFFFFF'
-      }
-    },
-    title: {
-      text: title,
-      align: 'left',
-      style: {
-        color: '#9ca3d8',
-        fontSize: '15px'
-      }
-    },
-    yAxis: {
-      title: {
-        text: 'unit',
-        style: {
-          color: '#FFFFFF',
-          fontSize: '12px'
-        }
-      },
-      labels: {
-        style: {
-          color: '#FFFFFF'
-        }
-      },
-      gridLineWidth: 1,
-      gridLineColor: 'rgba(255,255,255,.2)'
-    },
-    xAxis: {
-      categories: [
-        '01:00',
-        '02:00',
-        '03:00',
-        '04:00',
-        '05:00',
-        '06:00',
-        '07:00',
-        '08:00',
-        '09:00',
-        '10:00',
-        '11:00',
-        '12:00',
-        '13:00',
-        '14:00',
-        '15:00',
-        '16:00',
-        '17:00',
-        '18:00',
-        '19:00',
-        '20:00',
-        '21:00',
-        '22:00',
-        '23:00',
-        '24:00'
-      ],
-      labels: {
-        style: {
-          color: '#FFFFFF'
-        }
-      },
-      lineColor: '#FFFFFF',
-      tickColor: '#FFFFFF',
-      gridLineWidth: 1,
-      gridLineColor: 'rgba(255,255,255,.2)',
-      gridLineDashStyle: 'Dash'
-    },
-    legend: {
-      layout: 'horizontal',
-      align: 'right',
-      verticalAlign: 'top',
-      x: 0,
-      y: 0,
-      floating: true,
-      borderWidth: 0,
-      backgroundColor: 'transparent', // 设置背景为透明
-      shadow: true,
-      itemStyle: {
-        color: '#FFFFFF'
-      }
-    },
-    plotOptions: {
-      column: {
-        pointPadding: 0.2,
-        borderWidth: 0
-      }
-    },
-    series: [
-      {
-        name: '1号冷冻机',
-        data: [
-          387749, 280000, 129000, 64300, 54000, 34300, 40000, 35000, 45000,
-          30000, 32000, 41000, 39000, 42000, 47000, 36000, 37000, 38000, 39000,
-          40000, 41000, 42000, 43000, 44000
-        ]
-      },
-      {
-        name: '2号冷冻机',
-        data: [
-          45321, 140000, 10000, 140500, 19500, 113500, 120000, 135000, 125000,
-          118000, 114000, 132000, 140000, 123000, 119000, 128000, 130000,
-          134000, 138000, 145000, 142000, 139000, 137000, 136000
-        ]
-      },
-      {
-        name: '3号冷冻机',
-        data: [
-          45321, 140000, 10000, 140500, 19500, 113500, 90000, 85000, 75000,
-          72000, 78000, 82000, 81000, 83000, 85000, 86000, 88000, 90000, 91000,
-          92000, 93000, 94000, 95000, 96000
-        ]
-      },
-      {
-        name: '4号冷冻机',
-        data: [
-          45321, 140000, 10000, 140500, 19500, 113500, 40000, 38000, 36000,
-          35000, 34000, 32000, 33000, 31000, 30000, 29000, 28000, 27000, 26000,
-          25000, 24000, 23000, 22000, 21000
-        ]
-      }
-    ]
-  });
+  const [opt_h_ch,  setOptHCh] = useState(null);
+  const [opt_h_chp, setOptHChp] = useState(null);
+  const [opt_h_cwp, setOptHCwp] = useState(null);
+  const [opt_h_ct,  setOptHCt] = useState(null);
+  
+  const [opt_d_ch,  setOptDCh] = useState(null);
+  const [opt_d_chp, setOptDChp] = useState(null);
+  const [opt_d_cwp, setOptDCwp] = useState(null);
+  const [opt_d_ct,  setOptDCt] = useState(null);
+
+  const [opt_m_ch,  setOptMCh] = useState(null);
+  const [opt_m_chp, setOptMChp] = useState(null);
+  const [opt_m_cwp, setOptMCwp] = useState(null);
+  const [opt_m_ct,  setOptMCt] = useState(null);
+  
+
+  
+
+  useEffect(() => {
+    store.qryEnergyDevHour(null).then(({ data }) => {
+      // console.log(data, 'data hour');
+      const cate = [];
+      const seriaCh  = [{ name: '冷冻机耗电', data:[], color: clr_ch }]
+      const seriaChp = [{ name: '冷冻泵耗电', data:[], color: clr_chp }]
+      const seriaCwp = [{ name: '冷却泵耗电', data:[], color: clr_cwp }]
+      const seriaCt  = [{ name: '冷却塔耗电', data:[], color: clr_ct  }]
+      
+      data.map(o=>{
+        cate.push(o.dt);
+        seriaCh[0].data.push(o.chg_1_poa+o.chg_2_poa);
+        seriaChp[0].data.push(o.chpg_1_poa+o.chpg_2_poa);
+        seriaCwp[0].data.push(o.cwpg_1_poa+o.cwpg_2_poa);
+        seriaCt[0].data.push(o.ctg_1_poa+o.ctg_2_poa);
+      })
+      setOptHCh(OptColumn(cate, seriaCh,   "冷冻机总耗电量（时）","kwh"));
+      setOptHChp(OptColumn(cate, seriaChp, "冷冻泵总耗电量（时）","kwh"));
+      setOptHCwp(OptColumn(cate, seriaCwp, "冷却泵总耗电量（时）","kwh"));
+      setOptHCt(OptColumn(cate, seriaCt,   "冷却塔总耗电量（时）","kwh"));
+    })
+  }, []);
+
+  useEffect(() => {
+    store.qryEnergyDevDay(null).then(({ data }) => {
+      // console.log(data, 'data day');
+      const cate = [];
+      const seriaCh  = [{ name: '冷冻机耗电', data:[], color: clr_ch }]
+      const seriaChp = [{ name: '冷冻泵耗电', data:[], color: clr_chp}]
+      const seriaCwp = [{ name: '冷却泵耗电', data:[], color: clr_cwp}]
+      const seriaCt  = [{ name: '冷却塔耗电', data:[], color: clr_ct }]
+      
+      data.map(o=>{
+        cate.push(o.dt);
+        seriaCh[0].data.push(o.chg_1_poa+o.chg_2_poa);
+        seriaChp[0].data.push(o.chpg_1_poa+o.chpg_2_poa);
+        seriaCwp[0].data.push(o.cwpg_1_poa+o.cwpg_2_poa);
+        seriaCt[0].data.push(o.ctg_1_poa+o.ctg_2_poa);
+      })
+      setOptDCh(OptColumn(cate, seriaCh,   "冷冻机总耗电量（日）","kwh"));
+      setOptDChp(OptColumn(cate, seriaChp, "冷冻泵总耗电量（日）","kwh"));
+      setOptDCwp(OptColumn(cate, seriaCwp, "冷却泵总耗电量（日）","kwh"));
+      setOptDCt(OptColumn(cate, seriaCt,   "冷却塔总耗电量（日）","kwh"));
+    })
+  }, []);
+
+  useEffect(() => {
+    store.qryEnergyDevMonth(null).then(({ data }) => {
+      // console.log(data, 'data day');
+      const cate = [];
+      const seriaCh  = [{ name: '冷冻机耗电', data:[], color: clr_ch }]
+      const seriaChp = [{ name: '冷冻泵耗电', data:[], color: clr_chp}]
+      const seriaCwp = [{ name: '冷却泵耗电', data:[], color: clr_cwp}]
+      const seriaCt  = [{ name: '冷却塔耗电', data:[], color: clr_ct }]
+      
+      data.map(o=>{
+        cate.push(o.dt);
+        seriaCh[0].data.push(o.chg_1_poa+o.chg_2_poa);
+        seriaChp[0].data.push(o.chpg_1_poa+o.chpg_2_poa);
+        seriaCwp[0].data.push(o.cwpg_1_poa+o.cwpg_2_poa);
+        seriaCt[0].data.push(o.ctg_1_poa+o.ctg_2_poa);
+      })
+      setOptMCh(OptColumn(cate, seriaCh,   "冷冻机总耗电量（月）","kwh"));
+      setOptMChp(OptColumn(cate, seriaChp, "冷冻泵总耗电量（月）","kwh"));
+      setOptMCwp(OptColumn(cate, seriaCwp, "冷却泵总耗电量（月）","kwh"));
+      setOptMCt(OptColumn(cate, seriaCt,   "冷却塔总耗电量（月）","kwh"));
+    })
+  }, []);
 
   return (
     <div className={s.main}>
       <div className={s.lt}>
         <div className={s.item}>
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={columnOpt('冷冻机耗电')}
-          />
+          <HighchartsReact highcharts={Highcharts} options={opt_h_ch} />
         </div>
 
         <div className={s.item}>
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={columnOpt('冷冻泵耗电')}
-          />
+          <HighchartsReact highcharts={Highcharts} options={opt_h_chp} />
         </div>
 
         <div className={s.item}>
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={columnOpt('冷却泵耗电')}
-          />
+          <HighchartsReact highcharts={Highcharts} options={opt_h_cwp} />
         </div>
 
         <div className={s.item}>
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={columnOpt('冷却塔耗电')}
-          />
+          <HighchartsReact highcharts={Highcharts} options={opt_h_ct} />
         </div>
       </div>
+
+      <div className={s.center}>
+        <div className={s.item}>
+          <HighchartsReact highcharts={Highcharts} options={opt_d_ch} />
+        </div>
+
+        <div className={s.item}>
+          <HighchartsReact highcharts={Highcharts} options={opt_d_chp} />
+        </div>
+
+        <div className={s.item}>
+          <HighchartsReact highcharts={Highcharts} options={opt_d_cwp} />
+        </div>
+
+        <div className={s.item}>
+          <HighchartsReact highcharts={Highcharts} options={opt_d_ct} />
+        </div>
+      </div>
+
+
       <div className={s.rt}>
         <div className={s.item}>
-          <HighchartsReact highcharts={Highcharts} options={columnOpt('a')} />
+          <HighchartsReact highcharts={Highcharts} options={opt_m_ch} />
         </div>
 
         <div className={s.item}>
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={columnOpt('机电系统能效比')}
-          />
+          <HighchartsReact highcharts={Highcharts} options={opt_m_chp} />
         </div>
 
         <div className={s.item}>
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={columnOpt('机电耗电功率及占比')}
-          />
+          <HighchartsReact highcharts={Highcharts} options={opt_m_cwp} />
         </div>
 
         <div className={s.item}>
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={columnOpt('电子三厂耗电功率及占比')}
-          />
+          <HighchartsReact highcharts={Highcharts} options={opt_m_ct} />
         </div>
       </div>
     </div>
   );
 };
 
-export default observer(Index);
+export default observer(Device);

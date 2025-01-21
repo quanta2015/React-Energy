@@ -122,6 +122,15 @@
             span {
               color: #ffe900;
               text-align: center;
+
+              &::after {
+                content: attr(data-unit);
+                transform: scale(0.8);
+                font-size: 12px;
+                // color: #7ab9f4;
+                position: relative;
+                display: inline-block;
+              }
             }
           }
         }

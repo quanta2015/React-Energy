@@ -16,7 +16,7 @@ configure({ enforceActions: 'observed' });
 const Layout = lazy(() => import('./app/layout'));
 const Login = lazy(() => import('./app/login'));
 const Index = lazy(() => import('./app/index'));
-const Date = lazy(() => import('./app/date'));
+const Period = lazy(() => import('./app/period'));
 const Device = lazy(() => import('./app/device'));
 
 const User = lazy(() => import('./app/user'));
@@ -31,7 +31,7 @@ root.render(
             <Route path="/login" element={<Login />} />
             <Route element={<Layout />}>
               <Route path="/" element={<Index />} />
-              <Route path="/date" element={<Date />} />
+              <Route path="/period" element={<Period />} />
               <Route path="/device" element={<Device />} />
 
               <Route path="/user" element={<User />} />

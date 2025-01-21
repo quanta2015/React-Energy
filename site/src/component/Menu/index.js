@@ -66,7 +66,7 @@ const Menu = () => {
         navigate('/');
         break;
       case 2:
-        navigate('date');
+        navigate('period');
         break;
       case 3:
         navigate('device');
@@ -136,8 +136,8 @@ const Menu = () => {
 
         <div className={s.switch}>
           <span onClick={() => doSwitchScreen(1)}>监控汇总</span>
-          <span onClick={() => doSwitchScreen(2)}>日月分时</span>
-          <span onClick={() => doSwitchScreen(3)}>设备分类</span>
+          <span onClick={() => doSwitchScreen(2)}>分时耗电统计</span>
+          <span onClick={() => doSwitchScreen(3)}>设备耗电统计</span>
         </div>
       </div>
 

@@ -1,7 +1,4 @@
 export const OptLineInit = (categories, series, title, unit) => {
-  const allDataPoints = series.flatMap(item => item.data);
-  const maxValue = Math.max(...allDataPoints);
-  const minValue = Math.min(...allDataPoints);
 
   return {
     chart: {
@@ -34,8 +31,6 @@ export const OptLineInit = (categories, series, title, unit) => {
       },
       gridLineWidth: 1,
       gridLineColor: 'rgba(255,255,255,.2)',
-      max: maxValue + 2,
-      min: minValue,
     },
     xAxis: {
       categories,

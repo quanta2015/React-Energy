@@ -7,10 +7,15 @@ import HighchartsMore from 'highcharts/highcharts-more';
 import { OptBar } from './opt/bar';
 import { OptPie } from './opt/pie';
 import { OptLineInit } from './opt/line';
-
+import {computeStats} from './summary';
 import s from './index.module.less';
 
-import el from '@/img/icon/icon_el.svg'
+import icon_el from '@/img/icon/icon_el.svg'
+import icon_peak from '@/img/icon/icon_peak.svg'
+import icon_err from '@/img/icon/icon_err.svg'
+import icon_info from '@/img/icon/icon_info.svg'
+import icon_percent from '@/img/icon/icon_percent.svg'
+
 
 HighchartsMore(Highcharts);
 
@@ -36,6 +41,12 @@ const Period = () => {
   const [opt_pie6, setOptPie6] = useState(null);
   const [opt_pie7, setOptPie7] = useState(null);
   const [opt_pie8, setOptPie8] = useState(null);
+
+  const [summary, setSummary] = useState([]);
+  const [hour, setHour] = useState([]);
+  const [day, setDay] = useState([]);
+  const [month, setMonth] = useState([]);
+  const [info, setInfo] = useState({});
 
   useEffect(() => {
     store.qryEnergySummary(null).then(({ data }) => {
@@ -114,6 +125,7 @@ const Period = () => {
       setOptPie6(OptPie(data6,"上月"))
       setOptPie7(OptPie(data7,"本月"))
       setOptPie8(OptPie(data8,"上月"))
+      setSummary([...data]);
     })
   }, []);
 
@@ -127,6 +139,7 @@ const Period = () => {
         seria[0].data.push(o.poa)
       })
       setOptHour(OptLineInit(cate, seria, "耗电总功率", "kw"));
+      setHour([...data]);
     })
   }, []);
 
@@ -140,6 +153,7 @@ const Period = () => {
         seria[0].data.push(o.poa)
       })
       setOptDay(OptLineInit(cate, seria, "总耗电量（日）", "kwh"));
+      setDay([...data]);
     })
   }, []);
 
@@ -153,8 +167,22 @@ const Period = () => {
         seria[0].data.push(o.poa)
       })
       setOptMonth(OptLineInit(cate, seria, "总耗电量（月）", "kwh"));
+      setMonth([...data]);
     })
   }, []);
+
+
+  useEffect(() => {
+    console.log('summary', summary);
+    console.log('hour', hour);
+    console.log('day', day);
+    console.log('month', month);
+    const result = computeStats(summary, hour, day, month);
+
+    console.log('统计结果:');
+    console.log(JSON.stringify(result, null, 2));
+    setInfo(result);
+  }, [summary, hour, day, month]);
 
 
   return (
@@ -204,36 +232,95 @@ const Period = () => {
         <div className={s.item}>
           <div className={s.tab}>
             <div className={s.sect}>
-              <img src={el} alt="" />
-              <span>xxx</span>
+              <h1><img src={icon_el} alt="" />{"总能耗"}</h1>
+              <div className={s.row}>
+                <label>本日总能耗</label>
+                <span data-unit="kw">{info?.d0Total}</span>
+              </div>
+              <div className={s.row}>
+                <label>昨日总能耗</label>
+                <span data-unit="kw">{info?.d1Total}</span>
+              </div>
+              <div className={s.row}>
+                <label>日环比</label>
+                <span data-unit="%">{info?.dayCompare}</span>
+              </div>
+              <div className={s.row}>
+                <label>月环比</label>
+                <span data-unit="%">{info?.monthCompare}</span>
+              </div>
             </div>
             <div className={s.sect}>
-              <img src={el} alt="" />
-              <span>xxx</span>
+              <h1><img src={icon_peak} alt="" />{"环比峰值"}</h1>
+              <div className={s.row}>
+                <label>时能耗峰值</label>
+                <span data-unit="kw">
+                  <em>{`${info?.hourPeak?.dt} - ${info?.hourPeak?.poa}`}</em>
+                </span>
+              </div>
+              <div className={s.row}>
+                <label>日最高能耗</label>
+                <span data-unit="kw">
+                  <em>{`${info?.dayPeak?.dt} - ${info?.dayPeak?.poa}`}</em>
+                </span>
+              </div>
+
+              <div className={s.row}>
+                <label>7日均值</label>
+                <span data-unit="kw">{info?.dayTrend?.average}</span>
+              </div>
+
+              <div className={s.row}>
+                <label>3月均值</label>
+                <span data-unit="kw">{info?.monthTrend?.average}</span>
+              </div>
             </div>
+            
             <div className={s.sect}>
-              <img src={el} alt="" />
-              <span>xxx</span>
+              <h1><img src={icon_percent} alt="" />{"能耗占比"}</h1>
+              <div className={s.row}>
+                <label>冷机组1</label>
+                <span>{info?.d0Share?.details?.chg_1_poa?.value} <i data-unit="%">{info?.d0Share?.details?.chg_1_poa?.percent}</i> </span>
+              </div>
+              <div className={s?.row}>
+                <label>冷机组2</label>
+                <span>{info?.d0Share?.details?.chg_2_poa?.value} <i data-unit="%">{info?.d0Share?.details?.chg_2_poa?.percent}</i> </span>
+              </div>
+              <div className={s?.row}>
+                <label>冷却泵组1</label>
+                <span>{info?.d0Share?.details?.chpg_1_poa?.value}<i data-unit="%">{info?.d0Share?.details?.chpg_1_poa?.percent}</i></span>
+              </div>
+              <div className={s?.row}>
+                <label>冷却泵组2</label>
+                <span>{info?.d0Share?.details?.chpg_2_poa?.value}<i data-unit="%">{info?.d0Share?.details?.chpg_2_poa?.percent}</i></span>
+              </div>
+              <div className={s?.row}>
+                <label>冷冻泵组1</label>
+                <span>{info?.d0Share?.details?.cwpg_1_poa?.value}<i data-unit="%">{info?.d0Share?.details?.cwpg_1_poa?.percent}</i></span>
+              </div>
+              <div className={s?.row}>
+                <label>冷冻泵组2</label>
+                <span>{info?.d0Share?.details?.cwpg_2_poa?.value}<i data-unit="%">{info?.d0Share?.details?.cwpg_2_poa?.percent}</i></span>
+              </div>
             </div>
+
+            {info?.anomalies?.length > 0 &&
             <div className={s.sect}>
-              <img src={el} alt="" />
-              <span>xxx</span>
-            </div>
+              <h1><img src={icon_err} alt="" />{"异常检测"}</h1>
+              {info?.anomalies?.map((o,i)=>
+                <div key={i} className={s.row}>
+                  <label>{o.dt}</label>
+                  <span>{o.poa}</span>
+                </div>
+              )}
+            </div>}
+
+
             <div className={s.sect}>
-              <img src={el} alt="" />
-              <span>xxx</span>
-            </div>
-            <div className={s.sect}>
-              <img src={el} alt="" />
-              <span>xxx</span>
-            </div>
-            <div className={s.sect}>
-              <img src={el} alt="" />
-              <span>xxx</span>
-            </div>
-            <div className={s.sect}>
-              <img src={el} alt="" />
-              <span>xxx</span>
+              <h1><img src={icon_info} alt="" />{"综合概览信息"}</h1>
+              <div className={s.row}>
+                <span>{info?.overview}</span>
+              </div>
             </div>
           </div>
         </div>

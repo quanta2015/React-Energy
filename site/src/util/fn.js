@@ -59,11 +59,17 @@ export const isN = e => {
   return e === null || e === '' || e === undefined ? true : false;
 };
 
-export const formatNumber = e => {
+export const formatNumber = (e, n=2) => {
   if (isNaN(e)) return 0; // 如果不是数字，返回 0
-  const formatted = parseFloat(e.toFixed(2)); // 保留两位小数
+  const formatted = parseFloat(e.toFixed(n)); // 保留两位小数
   return formatted < 0 ? 0 : formatted; // 如果小于 0，则返回 0，否则返回格式化后的值
 };
+
+export const formatTime=(input)=> {
+  const str = input.toString().padStart(4, '0');
+  const formatted = str.slice(0, 2) + ':' + str.slice(2);
+  return formatted;
+}
 
 export const isMobile = width => {
   return document.querySelector('html').clientWidth < width;

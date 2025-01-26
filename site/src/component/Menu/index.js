@@ -88,7 +88,7 @@ const Menu = () => {
         <div className={s.menu}>
           {MENU.map((o, i) => (
             <span key={i}>
-              <Tooltip placement="bottom" color={'geekblue'} title={o.label}>
+              <Tooltip placement="top" color={'geekblue'} title={o.label}>
                 <img src={o.img} onClick={() => doMenu(o.fn)} />
               </Tooltip>
             </span>

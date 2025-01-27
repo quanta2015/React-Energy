@@ -178,7 +178,7 @@
         padding: 0 10px;
         height: 24px;
         background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.2);
         border-bottom: none;
         border-radius: 15px 2px 0 0;
         display: flex;
@@ -230,6 +230,15 @@
 }
 
 :global {
+  .act {
+    background: #ff6600!important;
+    border: 2px solid rgba(200, 80, 0, 0.6);
+  }
+
+  .sel {
+    background: #ff6600!important;
+  }
+
   .ant-tooltip-inner {
     // background: rgba(255,255,255,.9)!important;
     // color: #666!important;
@@ -240,10 +249,4 @@
   // .ant-tooltip-arrow:before {
   //   background: rgba(255,255,255,.9)!important;
   // }
-
-  .ant-tooltip {
-    border: 1px solid #6081f7;
-    border-radius: 5px;
-    opacity: 0.8;
-  }
 }

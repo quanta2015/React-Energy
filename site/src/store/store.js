@@ -20,7 +20,7 @@ class Store {
   async post(url, params) {
     const r = await post(url, params);
     // console.log(r,'aaaa')
-    if (r.code === 0) {
+    if ((r.code === 0)|| (r.code === 200)) {
       return r;
     } else {
       return null;
@@ -30,7 +30,7 @@ class Store {
 
   async get(url, params) {
     const r = await get(url, params);
-    console.log(r);
+    // console.log(r);
     if (r.code === 0) {
       return r.data;
     } else {
@@ -65,7 +65,7 @@ class Store {
   }
 
   ///////////////////////////////////////////////////
-  // ----------------- Energy API ------------------ //
+  // ----------------- Energy API ---------------  //
   ///////////////////////////////////////////////////
   async qryEnergyScreen(params) {
     return await this.post(urls.API_QRY_ENERGY_SCREEN, params);
@@ -87,8 +87,6 @@ class Store {
     return await this.post(urls.API_QRY_ENERGY_MONTH, params);
   }
 
-  
-
   async qryEnergyDevHour(params) {
     return await this.post(urls.API_QRY_ENERGY_DEV_HOUR, params);
   }
@@ -101,8 +99,27 @@ class Store {
     return await this.post(urls.API_QRY_ENERGY_DEV_MONTH, params);
   }
 
+
+  ///////////////////////////////////////////////////
+  // ----------------- Report API ---------------  //
+  ///////////////////////////////////////////////////
+  async qryReportHistory(params) {
+    return await this.post(urls.API_ANALYSIS_G0, params);
+  }
   
+  async qryReportSummary(params) {
+    return await this.post(urls.API_REPORT_SUMMARY, params);
+  }
+
+  async saveDevices(params) {
+    return await this.post(urls.API_SAVE_DEVICES, params);
+  }
   
+  async loadDevices(params) {
+    return await this.post(urls.API_LOAD_DEVICES, params);
+  }
+  
+
   
 
   async upload(params) {

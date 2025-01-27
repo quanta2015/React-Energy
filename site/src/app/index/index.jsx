@@ -20,10 +20,6 @@ import {
   SubRtg,
   saveData,
   cfList,
-  sortData,
-  groupData,
-  mergeData,
-  merge
 } from './mqtt';
 import Highcharts, { color } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';

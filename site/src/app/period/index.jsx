@@ -173,14 +173,10 @@ const Period = () => {
 
 
   useEffect(() => {
-    console.log('summary', summary);
-    console.log('hour', hour);
-    console.log('day', day);
-    console.log('month', month);
     const result = computeStats(summary, hour, day, month);
 
-    console.log('统计结果:');
-    console.log(JSON.stringify(result, null, 2));
+    // console.log('统计结果:');
+    // console.log(JSON.stringify(result, null, 2));
     setInfo(result);
   }, [summary, hour, day, month]);
 

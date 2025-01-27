@@ -1,0 +1,86 @@
+
+
+.g-sys0 {
+  width: var(--sys-wid);
+  flex: 1 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  color: #000;
+  font-family: "microsoft yahei";
+  background-color: var(--clr-main);
+  border-top: 1px solid rgba(255,255,255,.2);
+  height: calc(100vh - 120px);
+  overflow: hidden;
+  box-sizing: border-box;
+
+  .m-tab_list {
+    display: flex;
+    width: 100%;
+    padding: 5px 25px;
+    box-sizing: border-box;
+
+    &>.m-query {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin: 5px;
+      width: unset;
+
+      &+.m-query {
+        margin-left: 30px;
+      }
+
+
+      .ant-time-picker {
+        width: 100%;
+      }
+
+      label {
+        font-size: 15px;
+        color: #fff;
+        margin-right: 10px;
+      }
+
+      .m-btn {
+        display: flex;
+        width: 120px;
+        background: #ff6600;
+        padding: 0 10px;
+        height: 40px;
+        color: #fff;
+        border-radius: 5px;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+    }
+
+
+  }
+
+  .m-tab_cnt {
+    flex: 1;
+    position: relative;
+    margin: 15px 25px;
+
+    .m-none {
+      display: flex;
+      padding: 30px 40px;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      font-size: 24px;
+      color: rgba(255,255,255,.2);
+    }
+
+
+      
+
+  }
+
+  
+
+}

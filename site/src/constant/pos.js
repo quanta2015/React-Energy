@@ -2,7 +2,7 @@ import sys_arr1 from '@/img/bg/sys-arrow1.avif';
 import sys_arr2 from '@/img/bg/sys-arrow2.avif';
 
 const SERVER = '121.43.61.154';
-export const URL = (type, status) =>
+export const URL = (type, status='on') =>
   `http://${SERVER}/img/${type}_${status}.png`;
 
 export const POS_ARROW = [

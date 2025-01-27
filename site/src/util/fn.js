@@ -59,6 +59,17 @@ export const isN = e => {
   return e === null || e === '' || e === undefined ? true : false;
 };
 
+export const fix =(data,n,val=0)=> {
+  if (data === null || data === undefined) {
+    return val;
+  }
+  const parsedData = parseFloat(data);
+  if (isNaN(parsedData)) {
+    return val;
+  }
+  return parsedData.toFixed(n);
+}
+
 export const formatNumber = (e, n=2) => {
   if (isNaN(e)) return 0; // 如果不是数字，返回 0
   const formatted = parseFloat(e.toFixed(n)); // 保留两位小数
@@ -69,6 +80,12 @@ export const formatTime=(input)=> {
   const str = input.toString().padStart(4, '0');
   const formatted = str.slice(0, 2) + ':' + str.slice(2);
   return formatted;
+}
+
+export const formatDt=(d,t)=>{
+  d = d.replaceAll('-','')
+  t = t.replaceAll(':','')
+  return parseInt(`${d}${t}`.slice(0, -2))
 }
 
 export const isMobile = width => {

@@ -1,17 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
-import { Input, Table, Space, Pagination, Spin } from 'antd'
 import { API_SERVER } from '@/constant/apis'
 import { observer, MobXProviderContext } from 'mobx-react'
 import { listInt,clone } from '@/util/fn'
-import { getNameByKey } from '@/constant/data'
 
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import HC_more from 'highcharts/highcharts-more';
-import HC_exporting from 'highcharts/modules/exporting'
-import HC_exportData from 'highcharts/modules/export-data';
 import Sankey from 'highcharts/modules/sankey';
 
 

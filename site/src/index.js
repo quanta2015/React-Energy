@@ -19,6 +19,10 @@ const Index = lazy(() => import('./app/index'));
 const Period = lazy(() => import('./app/period'));
 const Device = lazy(() => import('./app/device'));
 
+const ReportHistory = lazy(() => import('./app/report/history'));
+const ReportDevice = lazy(() => import('./app/report/device'));
+const ReportRun = lazy(() => import('./app/report/run'));
+
 const User = lazy(() => import('./app/user'));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -33,6 +37,10 @@ root.render(
               <Route path="/" element={<Index />} />
               <Route path="/period" element={<Period />} />
               <Route path="/device" element={<Device />} />
+
+              <Route path="/report/run" element={<ReportRun />} />
+              <Route path="/report/history" element={<ReportHistory />} />
+              <Route path="/report/device" element={<ReportDevice />} />
 
               <Route path="/user" element={<User />} />
             </Route>

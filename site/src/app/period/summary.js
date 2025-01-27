@@ -49,7 +49,7 @@ export function sumPeriodPoa(summaryData, period) {
     }
   });
 
-  return total;
+  return formatNumber(total);
 }
 
 /**
@@ -150,7 +150,7 @@ export function calcSubsystemShare(summaryData, period) {
   Object.keys(fieldSumMap).forEach((field) => {
     const val = fieldSumMap[field];
     details[field] = {
-      value: val,
+      value: formatNumber(val),
       percent: total ? formatNumber((val / total) * 100, 1) : 0
     };
   });

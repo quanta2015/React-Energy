@@ -11,8 +11,6 @@ import s from './index.module.less';
 HighchartsMore(Highcharts);
 SolidGauge(Highcharts);
 
-
-
 const clr_ch = '#cde064';
 const clr_chp = '#33e94d';
 const clr_cwp = '#605bea';

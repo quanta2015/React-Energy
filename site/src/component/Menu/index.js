@@ -23,16 +23,16 @@ import menu09 from '@/img/icon/icon-menu-fac.svg';
 import menu10 from '@/img/icon/icon-menu-bar.svg';
 
 const MENU = [
-  { fn: '', label: '菜单说明内容', img: menu01 },
-  { fn: '', label: '菜单说明内容', img: menu02 },
-  { fn: '', label: '菜单说明内容', img: menu03 },
-  { fn: '', label: '菜单说明内容', img: menu04 },
-  { fn: '', label: '菜单说明内容', img: menu05 },
-  { fn: '', label: '菜单说明内容', img: menu06 },
-  { fn: '', label: '菜单说明内容', img: menu09 },
-  { fn: '', label: '菜单说明内容', img: menu10 },
-  { fn: '', label: '菜单说明内容', img: menu07 },
-  { fn: 'logout', label: '菜单说明内容', img: menu08 }
+  { router: '/report/history', label: '冷冻机数据分析', img: menu01 },
+  { router: '/report/device', label: '设备数据报表', img: menu02 },
+  { router: '/report/run', label: '实时系统状态监控', img: menu03 },
+  { router: '', label: '菜单说明内容', img: menu04 },
+  { router: '', label: '菜单说明内容', img: menu05 },
+  { router: '', label: '菜单说明内容', img: menu06 },
+  { router: '', label: '菜单说明内容', img: menu09 },
+  { router: '', label: '菜单说明内容', img: menu10 },
+  { router: '', label: '菜单说明内容', img: menu07 },
+  { router: '/logout', label: '菜单说明内容', img: menu08 }
 ];
 
 const Menu = () => {
@@ -43,34 +43,43 @@ const Menu = () => {
   const [show, setShow] = useState(false);
   const [we, setWe] = useState(null);
 
+  const [curScreen, setCurScreen] = useState(0);
+  const [curMenu, setCurMenu] = useState(-1);
+
   const doLogout = () => {
     store.saveUser(null);
     navigate('login');
   };
 
   useEffect(() => {
+    navigate('/report/run');
+
+
     store.weather(null).then(r => {
       setWe(r);
     });
   }, []);
 
   const doMenu = o => {
-    if (o === 'logout') {
+    setCurScreen(-1);
+    if (o === MENU.length - 1) {
       doLogout();
+    }else{
+      navigate(MENU[o].router);
+      setCurMenu(o);
     }
   };
 
   const doSwitchScreen = i => {
+    setCurMenu(-1);
+    setCurScreen(i);
     switch (i) {
-      case 1:
+      case 0:
         navigate('/');
         break;
-      case 2:
-        navigate('period');
-        break;
-      case 3:
-        navigate('device');
-        break;
+      case 1: navigate('period'); break;
+      case 2: navigate('device'); break;
+      case 3: navigate('run'); break;
       default:
         break;
     }
@@ -87,9 +96,9 @@ const Menu = () => {
         <span>安诺赛能源管理平台</span>
         <div className={s.menu}>
           {MENU.map((o, i) => (
-            <span key={i}>
+            <span key={i} className={curMenu===i?'sel':''} >
               <Tooltip placement="top" color={'geekblue'} title={o.label}>
-                <img src={o.img} onClick={() => doMenu(o.fn)} />
+                <img src={o.img} onClick={() => doMenu(i)} />
               </Tooltip>
             </span>
           ))}
@@ -135,9 +144,9 @@ const Menu = () => {
         </div>
 
         <div className={s.switch}>
-          <span onClick={() => doSwitchScreen(1)}>监控汇总</span>
-          <span onClick={() => doSwitchScreen(2)}>分时耗电统计</span>
-          <span onClick={() => doSwitchScreen(3)}>设备耗电统计</span>
+          <span className={curScreen===0?'act':''} onClick={() => doSwitchScreen(0)}>监控汇总</span>
+          <span className={curScreen===1?'act':''} onClick={() => doSwitchScreen(1)}>分时耗电统计</span>
+          <span className={curScreen===2?'act':''} onClick={() => doSwitchScreen(2)}>设备耗电统计</span>
         </div>
       </div>
 

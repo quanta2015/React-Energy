@@ -1,0 +1,160 @@
+:global {
+  .run>.label {
+      cursor: unset!important;
+    
+  }
+}
+
+.main {
+  flex: 1 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--clr-main);
+  height: calc(100vh - 120px);
+  box-sizing: border-box;
+  border-top: 1px solid rgba(255,255,255,.2);
+
+  &>.wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+
+    .lt, .rt {
+      position: absolute;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.5);
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      flex: 1 1;
+      gap: 15px;
+      padding: 20px;
+      box-sizing: border-box;
+      align-self: stretch;
+
+      &>.wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        &:last-child {
+          margin-top: 20px;
+        }
+
+        .btn {
+          background: #eee;
+          width: calc(50% - 5px);
+          padding: 5px 10px;
+          border-radius: 3px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: #333;
+          font-size: 13px;
+          letter-spacing: 2px;
+          box-sizing: border-box;
+          cursor: pointer;
+
+          &:global(.act) {
+            color: #fff;
+          }
+        }
+
+        em {
+          width: 100%;
+        }
+      }
+    }
+
+    .rt {
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .ct {
+      position: relative;
+      width: 1350px;
+      height: 790px;
+      min-width: 1350px;
+      min-height: 790px;
+      display: flex;
+      flex-direction: column;
+      padding: 0 20px;
+      box-sizing: border-box;
+
+      .bg {
+        position: absolute;
+        width: 1200px;
+        height: auto;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .device {
+        position: absolute;
+        display: block;
+        min-width: 100px;
+        cursor: move;
+
+        
+        &:global(.label) {
+          .id {
+            top: -25px;
+          }
+        }
+
+        &.run {
+          .label {
+            outline: none!important;
+            cursor: auto!important;
+
+            label {
+              cursor: auto!important;
+            }
+          }
+        }
+
+        .id {
+          position: absolute;
+          top: -15px;
+          left: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 16px;
+          height: 16px;
+          font-size: 12px;
+          border-radius: 12px;
+          background: rgba(255,255,255,.8);
+          color: #666;
+          cursor: pointer;
+        }
+      }
+
+
+      .label {
+        display: flex;
+        gap: 5px;
+        outline: 1px dashed #ffff00;
+        outline-offset: 5px;
+        
+        // background: rgba(255,255,255,.5);
+        // box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.1);
+
+        label {
+          color: #fff;
+          cursor: move!important;
+        }
+        span {
+          color: #ffff00;
+        }
+      }
+    }
+
+  }
+}
+

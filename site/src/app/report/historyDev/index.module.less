@@ -25,7 +25,7 @@
       position: absolute;
       z-index: 100;
       background: rgba(255, 255, 255, 0.5);
-      width: calc( (100vw - 1350px)/2 );
+      width: 240px;
       display: flex;
       flex-direction: column;
       flex: 1 1;
@@ -41,71 +41,21 @@
         flex-wrap: wrap;
         gap: 10px;
 
-        &:last-child {
-          margin-top: 20px;
-        }
-
-        .btn {
-          background: #eee;
-          width: calc(50% - 5px);
-          padding: 5px 10px;
-          border-radius: 3px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          color: #333;
-          font-size: 13px;
-          letter-spacing: 2px;
-          box-sizing: border-box;
-          cursor: pointer;
-
-          &:global(.act) {
-            color: #fff;
-          }
-        }
-
-        em {
-          width: 100%;
-        }
       }
     }
 
-    .rt {
-      right: 0;
-    }
     .lt {
       left: 0;
       gap: 0;
-      padding: 10px 10px 10px 0;
+      padding: 20px;
       background: unset;
-      // background: rgba(255, 255, 255, 0.1);
-
-      .tap {
-        height: 24px !important;
-        gap: 5px;
+      
+      
+      .wrap {
         display: flex;
-        padding: 0 10px 20px;
-        margin-top: -10px;
-
-        span {
-          padding: 5px 10px;
-          background: rgba(255, 255, 255, .2);
-          color: #fff;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border-radius: 0 0 3px 3px;
-          width: 60px;
-          cursor: pointer;
-        }
-      }
-
-      &>div {
-       height: 25%;
-
-        &>div {
-          height: 100%;
-        }
+        flex-direction: column;
+        color: #fff;
+        padding: 10px;
       }
     }
 
@@ -176,10 +126,7 @@
         gap: 5px;
         outline: 1px dashed #ffff00;
         outline-offset: 5px;
-
-        // background: rgba(255,255,255,.5);
-        // box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.1);
-
+        
         label {
           color: #fff;
           cursor: move!important;

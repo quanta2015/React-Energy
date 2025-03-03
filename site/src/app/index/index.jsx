@@ -14,13 +14,7 @@ import { loadUser } from '@/util/token';
 import { useNavigate } from 'react-router-dom';
 import { sensorDataToList, formatNumber } from '@/util/fn';
 import mqtt from 'mqtt';
-import {
-  serverUrl,
-  SAV_TIME,
-  SubRtg,
-  saveData,
-  cfList,
-} from './mqtt';
+import { serverUrl, SAV_TIME, SubRtg, saveData, cfList } from '@/util/mqtt';
 import Highcharts, { color } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMore from 'highcharts/highcharts-more';
@@ -72,8 +66,6 @@ const Index = () => {
     });
     client.on('message', (addr, msg) => saveData(msg, ret));
 
-    
-
     const interval = setInterval(() => {
       const filtered = ret.filter(item => item.code === code);
 
@@ -104,7 +96,6 @@ const Index = () => {
       setEer1(formatNumber(_eer1));
       setEer2(formatNumber(_eer2));
     }, SAV_TIME);
-
 
     return () => {
       if (client) {
@@ -156,7 +147,7 @@ const Index = () => {
         series3[3].data.push(o.chg_2_chw_wtpi);
 
         series4[0].data.push(o.chg_1_cw_wtpo);
-        series4[1].data.push(o.chg_2_cw_wtpi);
+        series4[1].data.push(o.chg_1_cw_wtpi);
         series4[2].data.push(o.chg_2_cw_wtpo);
         series4[3].data.push(o.chg_2_cw_wtpi);
 

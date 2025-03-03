@@ -1,27 +1,28 @@
-const schedule = require('node-schedule');
-const mysql = require('mysql2/promise');
-const dayjs = require('dayjs');
+const schedule = require("node-schedule");
+const mysql = require("mysql2/promise");
+const { exec } = require("child_process");
+const dayjs = require("dayjs");
 
 const DB_CONFIG = {
-  host:'127.0.0.1',
-  user: 'kbdplat',
-  password: 'Ans-kbd-20240616-???',
-  database: 'kbdWater'
+  host: "127.0.0.1",
+  user: "kbdplat",
+  password: "Ans-kbd-20240616-???",
+  database: "kbdWater"
 };
 
 // '0 * * * *' 表示每个小时的第 0 分钟执行
-schedule.scheduleJob('0 * * * *', async () => {
+schedule.scheduleJob("0 * * * *", async () => {
   try {
     // 1. 获取“上一小时”的整点时间
-    const lastHour = dayjs().subtract(1, 'hour');
-    const summaryDt = lastHour.format('YYYYMMDDHH') + '0000';
+    const lastHour = dayjs().subtract(1, "hour");
+    const summaryDt = lastHour.format("YYYYMMDDHH") + "0000";
     const connection = await mysql.createConnection(DB_CONFIG);
 
     // 3. 检查 tab_summary 里是否已存在该小时数据
-    const sql = `SELECT 1 FROM tab_summary  WHERE dt = '${summaryDt}'  LIMIT 1`
+    const sql = `SELECT 1 FROM tab_summary  WHERE dt = '${summaryDt}'  LIMIT 1`;
     const [checkRows] = await connection.execute(sql);
 
-    console.log(sql)
+    console.log(sql);
 
     if (checkRows.length > 0) {
       console.log(`[${new Date().toISOString()}] 上一小时(${summaryDt})已存在统计数据，无需重复插入。`);
@@ -30,8 +31,8 @@ schedule.scheduleJob('0 * * * *', async () => {
     }
 
     // 4. 如果不存在，则从 tab_sys 统计上一小时区间的数据
-    const startTime = lastHour.format('YYYYMMDDHH') + '0000';
-    const endTime = dayjs(lastHour).add(1, 'hours').format('YYYYMMDDHH') + '0000';
+    const startTime = lastHour.format("YYYYMMDDHH") + "0000";
+    const endTime = dayjs(lastHour).add(1, "hours").format("YYYYMMDDHH") + "0000";
     const summarySql = `
       SELECT
         code,
@@ -60,7 +61,7 @@ schedule.scheduleJob('0 * * * *', async () => {
         AND dt < ?
       GROUP BY code, FLOOR(dt/10000)
     `;
-    
+
     const [rows] = await connection.execute(summarySql, [startTime, endTime]);
 
     if (rows.length === 0) {
@@ -95,9 +96,9 @@ schedule.scheduleJob('0 * * * *', async () => {
       ) VALUES ?
     `;
 
-    const insertValues = rows.map(row => ([
+    const insertValues = rows.map((row) => [
       row.code,
-      summaryDt,  
+      summaryDt,
       row.sys_1_poa,
       row.sys_2_poa,
       row.chg_1_poa,
@@ -115,8 +116,8 @@ schedule.scheduleJob('0 * * * *', async () => {
       row.chg_1_cw_wtpo,
       row.chg_1_cw_wtpi,
       row.chg_2_cw_wtpo,
-      row.chg_2_cw_wtpi,
-    ]));
+      row.chg_2_cw_wtpi
+    ]);
 
     await connection.query(insertSql, [insertValues]);
     console.log(`[${new Date().toISOString()}] 成功插入上一小时(${summaryDt})统计数据，共 ${rows.length} 条。`);
@@ -124,7 +125,27 @@ schedule.scheduleJob('0 * * * *', async () => {
     // 6. 关闭数据库连接
     await connection.end();
   } catch (err) {
-    console.error('执行定时统计任务出错：', err);
+    console.error("执行定时统计任务出错：", err);
   }
 });
 
+schedule.scheduleJob("0 0 * * *", () => {
+  try {
+    console.log(`[${new Date().toISOString()}] 开始执行重启 MQTT 服务器任务。`);
+
+    // 执行 systemctl 命令重启 mosquitto 服务
+    exec("systemctl restart mosquitto", (error, stdout, stderr) => {
+      if (error) {
+        console.error(`[${new Date().toISOString()}] 重启 MQTT 服务器失败：`, error);
+        return;
+      }
+      if (stderr) {
+        console.error(`[${new Date().toISOString()}] 重启 MQTT 服务器的警告：`, stderr);
+        return;
+      }
+      console.log(`[${new Date().toISOString()}] 重启 MQTT 服务器成功：`, stdout);
+    });
+  } catch (err) {
+    console.error(`[${new Date().toISOString()}] 执行定时任务出错：`, err);
+  }
+});

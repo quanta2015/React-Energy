@@ -3,7 +3,7 @@ export const OptPie = (data, title) => ({
     plotBackgroundColor: null,
     plotBorderWidth: 0,
     plotShadow: false,
-    backgroundColor: 'transparent', 
+    backgroundColor: 'transparent'
   },
   title: {
     text: title,
@@ -12,23 +12,23 @@ export const OptPie = (data, title) => ({
     y: 20,
     style: {
       fontSize: '14px',
-      color: 'white', 
-    },
+      color: 'white'
+    }
   },
   accessibility: {
     point: {
-      valueSuffix: '%',
-    },
+      valueSuffix: '%'
+    }
   },
   tooltip: {
     style: {
-      fontSize: '12px',
+      fontSize: '12px'
     },
-    pointFormat: '<b style="color:#666;">{point.percentage:.1f}%</b>',
+    pointFormat: '<b style="color:#666;">{point.percentage:.1f}%</b>'
   },
   plotOptions: {
     pie: {
-      borderWidth: 0, 
+      borderWidth: 0,
       dataLabels: {
         enabled: true,
         distance: -15,
@@ -36,39 +36,42 @@ export const OptPie = (data, title) => ({
         style: {
           fontWeight: 'bold',
           color: 'white',
-          fontSize: '10px',
-        },
+          fontSize: '10px'
+        }
       },
       startAngle: 0,
       endAngle: 360,
       center: ['50%', '60%'],
-      size: '90%',
-    },
+      size: '90%'
+    }
   },
   xAxis: {
     labels: {
       style: {
-        color: 'white', 
-      },
-    },
+        color: 'white'
+      }
+    }
   },
   yAxis: {
     labels: {
       style: {
-        color: 'white', 
-      },
+        color: 'white'
+      }
     },
     title: {
       style: {
-        color: 'white',
-      },
-    },
+        color: 'white'
+      }
+    }
   },
   series: [
     {
       type: 'pie',
       innerSize: '70%',
-      data,
-    },
+      data
+    }
   ],
+  exporting: {
+    enabled: false // 直接关闭导出功能（按钮和菜单均隐藏）
+  }
 });

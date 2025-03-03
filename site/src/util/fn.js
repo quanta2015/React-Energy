@@ -8,6 +8,9 @@ export const clone = obj => {
   return copy;
 };
 
+export const getListHead = list => list.slice(0, Math.ceil(list.length / 2));
+export const getListTail = list => list.slice(Math.ceil(list.length / 2));
+
 export const opt = list => list.map(o => ({ label: o, value: o }));
 
 export const getBase64 = file =>
@@ -59,7 +62,11 @@ export const isN = e => {
   return e === null || e === '' || e === undefined ? true : false;
 };
 
-export const fix =(data,n,val=0)=> {
+export const isNullObj = obj => {
+  return Object.keys(obj).length > 0;
+};
+
+export const fix = (data, n, val = 0) => {
   if (data === null || data === undefined) {
     return val;
   }
@@ -68,25 +75,35 @@ export const fix =(data,n,val=0)=> {
     return val;
   }
   return parsedData.toFixed(n);
-}
+};
 
-export const formatNumber = (e, n=2) => {
+export const formatNumber = (e, n = 2) => {
   if (isNaN(e)) return 0; // 如果不是数字，返回 0
   const formatted = parseFloat(e.toFixed(n)); // 保留两位小数
   return formatted < 0 ? 0 : formatted; // 如果小于 0，则返回 0，否则返回格式化后的值
 };
 
-export const formatTime=(input)=> {
+export const formatTime = input => {
   const str = input.toString().padStart(4, '0');
   const formatted = str.slice(0, 2) + ':' + str.slice(2);
   return formatted;
-}
+};
 
-export const formatDt=(d,t)=>{
-  d = d.replaceAll('-','')
-  t = t.replaceAll(':','')
-  return parseInt(`${d}${t}`.slice(0, -2))
-}
+export const formatData = r => {
+  Object.keys(r).forEach(key => {
+    if (r[key] === '' || isNaN(parseFloat(r[key]))) {
+      r[key] = '';
+    } else {
+      r[key] = parseFloat(r[key]);
+    }
+  });
+};
+
+export const formatDt = (d, t) => {
+  d = d.replaceAll('-', '');
+  t = t.replaceAll(':', '');
+  return parseInt(`${d}${t}`.slice(0, -2));
+};
 
 export const isMobile = width => {
   return document.querySelector('html').clientWidth < width;
@@ -461,6 +478,8 @@ export const sensorDataToList = (data_org, code, ret = {}) => {
     });
   });
 
-  // console.log('pfff',ret)
+  ret.fm[4].status = 'off';
+  ret.fm[9].status = 'off';
+
   return ret;
 };

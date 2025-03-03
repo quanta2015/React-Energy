@@ -1,3 +1,16 @@
+export const PL = [
+  'ReportRun',
+  'ReportHistory',
+  'ReportDevice',
+  'ReportHistoryDev',
+  'ReportHistorySys',
+  'Control',
+  'Tmp1',
+  'Tmp2',
+  'User'
+];
+
+
 export const MAP_NAME = {
   sys_1_poa: '机电能耗',
   sys_2_poa: '电子三厂能耗',
@@ -30,8 +43,6 @@ export const FAC_DATA = [
   { id:2, key: 'cps_2', title: '1-3电子二厂' },
   { id:3, key: 'cps_2', title: '1-4电子二厂' },
 ]
-
-
 
 
 export const FAC_TD = {
@@ -72,90 +83,85 @@ export const FAC_TD = {
 }
 
 
+const SYS_1_NAME = {
+  name: '机电机房',
+  sys: ['机电系统'],
+  ch:  ['3-3机电冰机','3-4机电冰机',],
+  chp: ['机电4#冷冻泵','机电3#冷冻泵',],
+  cwp: ['机电4#冷却泵','机电3#冷却泵',],
+  ct:  ['机电4#冷却塔','机电3#冷却塔',],
+}
 
-
-
-export const mapDev = (type)=>{
-  return {
-    "冷却塔": "ct",
-    "冷却泵": "cwp",
-    "冷冻泵": "chp",
-    "冰机": "ch",
-    "空调箱": "air",
-    "风管": "apip",
-  }[type]
+const SYS_2_NAME = {
+  name: '电子三厂机房',
+  sys: ['电子三厂系统'],
+  ch:  ['3-1电子三厂冰机','3-2电子三厂冰机'],
+  chp: ['电子三厂2#冷冻泵','电子三厂1#冷冻泵'],
+  cwp: ['电子三厂2#冷却泵','电子三厂1#冷却泵'],
+  ct:  ['电子三厂2#冷却塔','电子三厂1#冷却塔'],
 }
 
 
+export const SYS_NAME = [SYS_1_NAME, SYS_2_NAME]
 
 
 
+export const POS_SET = {
+  son_set: 0,
+  rlap_set: 1,
+  vlpf_set: 2,
+  vlsf_set: 3,
+  vlpc_set: 4,
+  vlsc_set: 5,
+  rlam_set: 6,
+  vlp_set: 0,
+  vls_set: 1,
+  prd_set: 0,
+  cw_wtpi_set: 1,
+  chw_wtpo_set: 2
+};
 
-export const json_field = {
-  table: 'tab_field',
-  define: [{
-      dataIndex: 'id',
-      type: 'string',
-      title: '编号',
-      key: true,
-      width: 80,
-      fixed: 'left',
-      align: 'center',
-      req: false,
-    },
-    {
-      dataIndex: 'name',
-      type: 'string',
-      title: '字段名称',
-      fixed: 'left',
-      width: 150,
-      req: true,
-    }
+
+export const  SET_MODULE = {
+  ch: [
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0]
   ],
-}
+  chp: [
+    [0, 0],
+    [0, 0],
+    [0, 0],
+    [0, 0]
+  ],
+  cwp: [
+    [0, 0],
+    [0, 0],
+    [0, 0],
+    [0, 0]
+  ],
+  ct: [
+    [0, 0],
+    [0, 0],
+    [0, 0],
+    [0, 0]
+  ],
+  sys: [
+    [0, 0, 0],
+    [0, 0, 0]
+  ]
+};
 
-export const json_user = [{
-    dataIndex: 'id',
-    type: 'string',
-    title: '編號',
-    width: 60,
-    fixed: 'left',
-    align: 'center',
-  },{
-    dataIndex: 'name',
-    type: 'string',
-    title: '用戶名称',
-    width: 120,
-    fixed: 'left',
-    align: 'center',
-  },{
-    dataIndex: 'usr',
-    type: 'string',
-    title: '賬號',
-    width: 200,
-     align: 'center',
-  },{
-    dataIndex: 'phone',
-    type: 'string',
-    title: '联系方式',
-    width: 200,
-     align: 'center',
-  },{
-    dataIndex: 'email',
-    type: 'string',
-    title: '邮箱地址',
-    width: 200,
-     align: 'center',
-  },{
-    dataIndex: 'pwd',
-    type: 'string',
-    title: '密碼',
-    width: 200,
-    align: 'center',
-    render: (text, r) => {
-      var lastChar = text[text.length - 1];
 
-      return <span>{`*****${lastChar}`}</span>
-    }
-  }
-]
+
+const  SET_OBJ = {
+  ch:  [[0, 0, 0, 0, 0, 0, 0],[0, 0, 0, 0, 0, 0, 0]],
+  chp: [[0, 0],[0, 0]],
+  cwp: [[0, 0],[0, 0]],
+  ct:  [[0, 0],[0, 0]],
+  sys: [[0, 0, 0]]
+};
+
+
+export const SET_LIST = [SET_OBJ,SET_OBJ]

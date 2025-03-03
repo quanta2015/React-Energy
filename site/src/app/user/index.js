@@ -1,148 +1,289 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React,{useEffect,useState,useRef} from 'react';
-import {Table, Space, Spin, Button, Modal, message, Select, DatePicker, Empty} from 'antd'
-import {  PlusCircleOutlined,ExclamationCircleFilled,FileMarkdownOutlined,CheckOutlined,CloudDownloadOutlined } from '@ant-design/icons';
-import cls from 'classnames'
-import dayjs from 'dayjs'
-import { useSearchParams } from 'react-router-dom';
-import { observer,MobXProviderContext } from 'mobx-react'
-import {API_SERVER} from '@/constant/apis'
-import {json_user} from '@/constant/data'
-import {getKeyField,clone,getBase64, genQR} from '@/util/fn'
+import React, { useEffect, useState, useCallback } from 'react';
+import { Form, Spin, Button, message, Input, Checkbox } from 'antd';
+import Icon, {
+  CheckOutlined,
+  CloseOutlined,
+  EditOutlined
+} from '@ant-design/icons';
+import cls from 'classnames';
+import { observer, MobXProviderContext } from 'mobx-react';
 import s from './index.module.less';
-import {getColumnSearchProps} from '@/util/filter'
-import Menu from '@/component/Menu'
-import { loadLocalUser } from '@/util/token'
-import { useNavigate } from 'react-router-dom'
+import { isN } from '@/util/fn';
 
-import FormMain from './FormMain'
+const opt = [
+  { label: '冷冻机分析', value: '冷冻机分析' },
+  { label: '设备数据报表', value: '设备数据报表' },
+  { label: '实时状态监控', value: '实时状态监控' },
+  { label: '历史状态查询', value: '历史状态查询' },
+  { label: '设备信息查询', value: '设备信息查询' },
+  { label: '系统设备控制', value: '系统设备控制' },
+  { label: '系统能耗优化', value: '系统能耗优化' },
+  { label: '系统报表分析', value: '系统报表分析' },
+  { label: '系统用户管理', value: '系统用户管理' }
+];
+const _item = { id: -1, usr: '', name: '', pwd: '', role: '', auth: '' };
 
+const encodeRole = list => {
+  let ret = [0, 0, 0, 0];
+  list.map((item, i) => {
+    opt.map((o, j) => {
+      if (item === o) {
+        ret[j] = 1;
+      }
+    });
+  });
+  return ret.join('|');
+};
 
-const { confirm } = Modal;
+const decodeRole = s => {
+  let ret = [];
+  if (isN(s)) {
+    return [];
+  }
 
-
+  s.split('').map((item, i) => {
+    if (parseInt(item) === 1) {
+      ret.push(opt[i]);
+    }
+  });
+  return ret;
+};
 
 const User = () => {
-  const { store } = React.useContext(MobXProviderContext)
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const { store } = React.useContext(MobXProviderContext);
 
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const inputRef = useRef(null);
-
-  const [refresh,setRefresh] = useState(false)
-  const [showForm,setShowForm] = useState(false)
-  const [method, setMethod] = useState('Insert')
+  const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [ds, setDs] = useState(false);
-  const [item,setItem]  = useState(null);
+  const [user, setUser] = useState([]);
+  const [show, setShow] = useState(false);
+  const [item, setItem] = useState(_item);
 
-  const doSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
+  console.log(user, 'user');
 
-  const doReset = (clearFilters, dataIndex, confirm) => {
-    if (clearFilters) {
-      clearFilters();
-      setSearchText('');
-      setSearchedColumn(dataIndex);
-      confirm();
-    }
-  };
-
-  // 添加功能操作
-  const col = json_user.concat({
-    title: '機能',
-    width: 200,
-    align: 'center',
-    fixed: 'right',
-    render: o => (
-      <Space>
-        <Button type="primary" onClick={()=>doEdit(o)}>編集</Button>
-        <Button type="primary" danger onClick={()=>showDelConfirm(o)}>刪除</Button>
-      </Space>
-    ),
-  })
-  // 數據查詢過濾
-  
-  col[2] = {...col[2],...getColumnSearchProps('usr',doSearch,doReset,inputRef,searchedColumn,searchText)}
-  
-
-  const showDelConfirm = (e) => {
-    confirm({
-      title: '确认要删除记录?',
-      icon: <ExclamationCircleFilled />,
-      okType: 'danger',
-      okText: '确 定',
-      cancelText: '取 消',
-      onOk() {
-        doDel(e)
-      },
-    });
-  };
-
-  // 加載數據
   useEffect(() => {
-    setLoading(true)
-    store.queryUsr(null).then(r=>{
-      setLoading(false)
-      setDs(r.data)
-      setRefresh(false)
-      console.log(r.data)
-    })
-  }, [refresh]);
+    setLoading(true);
+    store.userList().then(r => {
+      console.log(r);
+      setLoading(false);
+      setUser(r.data);
+    });
+  }, []);
 
+  const doDelItem = useCallback(
+    async id => {
+      setLoading(true);
+      let r = await store.userDel({ id });
+      setUser(r.data);
+      setLoading(false);
+      message.info('删除用户数据成功');
+    },
+    [store]
+  );
 
-  // 刪除數據
-  const doDel = (e)=>{
-    let params = { 
-      id: e.id
+  const doCheckVaild = useCallback(async () => {
+    try {
+      const values = await form.validateFields();
+      console.log(values);
+      await doSave(values);
+    } catch (errorInfo) {
+      console.log(errorInfo);
+      return;
     }
-    setLoading(true)
-    store.delUsr(params).then(r=>{
-      setLoading(false)
-      setDs(r.data)
-    })
-  }
+  }, [form]);
+  const doSave = useCallback(
+    async u => {
+      // 将选中的权限数组转换为9位字符串
+      u.auth = opt
+        .map(option => (u.auth.includes(option.value) ? '1' : '0'))
+        .join('');
 
-  const doEdit=(e)=>{
-    setItem(e)
-    setMethod('update')
-    setShowForm(true)
-  }
+      setLoading(true);
+      let r = await store.userSave(u);
+      setUser(r.data);
+      setShow(false);
+      setLoading(false);
+      message.info('保存用户数据成功');
+    },
+    [store]
+  );
+  const doClose = useCallback(() => {
+    setShow(false);
+  }, []);
 
+  const renderCheck = e =>
+    e ? (
+      <CheckOutlined className="fc-green" />
+    ) : (
+      <CloseOutlined className="fc-red" />
+    );
 
-  const doAdd =()=>{
-    setMethod('insert')
-    setShowForm(true)
-  }
+  const doShowForm = e => {
+    let copy = { ...e };
 
+    // 处理权限字段
+    if (copy.auth) {
+      // 将auth字符串转换为选中的权限数组
+      const authArray = copy.auth.split('');
+      copy.auth = opt
+        .filter((_, index) => authArray[index] === '1')
+        .map(item => item.value);
+    } else {
+      // 如果是新用户，初始化为空数组
+      copy.auth = [];
+    }
 
+    setItem(copy);
+    form.setFieldsValue(copy);
+    setShow(true);
+  };
 
   return (
-    
-    <div className={s.index}>
-      <Spin spinning={loading}>
-       
-        <div className={s.main}>
+    <Spin spinning={loading}>
+      <div className={s.user}>
+        <div className={s.conf}>
           <div className={s.fun}>
-            <Space>
-              <Button type="primary" icon={<PlusCircleOutlined/>} danger onClick={()=>doAdd()}>添加用户</Button>
-            </Space>
+            <div
+              className={cls(s.btn, s.orange)}
+              onClick={e => doShowForm(_item)}
+            >
+              <Icon type="plus" />
+              添加用户
+            </div>
           </div>
-          <Table dataSource={ds} columns={col} scroll={{ x: 1000 }} pagination={{ defaultPageSize: 6 }}/>
+
+          <div className={s.list}>
+            <div className={s.row}>
+              <span>序号</span>
+              <span>账号</span>
+              <span>用户名</span>
+              <span>密码</span>
+              {opt.map((o, i) => (
+                <span key={i}>{o.label}</span>
+              ))}
+              <span></span>
+            </div>
+            {user.map((item, i) => (
+              <div className={s.row} key={i}>
+                <span>{item.id}</span>
+                <span>{item.usr}</span>
+                <span>{item.name}</span>
+                <span>{item.pwd}</span>
+                {opt.map((o, i) => (
+                  <span key={i}>
+                    {renderCheck(parseInt(item.auth.split('')[i]))}
+                  </span>
+                ))}
+                <span>
+                  <Button
+                    type="primary"
+                    className={cls(s.green)}
+                    icon={<EditOutlined />}
+                    size="small"
+                    onClick={() => doShowForm(item)}
+                  >
+                    编 辑
+                  </Button>
+
+                  <Button
+                    type="primary"
+                    className={cls(s.red)}
+                    icon={<EditOutlined />}
+                    size="small"
+                    onClick={() => doDelItem(item.id)}
+                  >
+                    删 除
+                  </Button>
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
+        {show && (
+          <div className={s.form}>
+            <div className={s.wrap}>
+              <Form form={form} layout="horizontal" initialValues={item}>
+                <Form.Item
+                  className={s.hide}
+                  name="id"
+                  rules={[{ required: true }]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  label="账号"
+                  name="usr"
+                  rules={[{ required: true, message: '请输入账号!' }]}
+                >
+                  <Input
+                    size="large"
+                    placeholder="请输入账号"
+                    allowClear
+                    prefix={
+                      <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+                    }
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="密码"
+                  name="pwd"
+                  rules={[{ required: true, message: '请输入密码!' }]}
+                >
+                  <Input.Password
+                    size="large"
+                    placeholder="请输入密码"
+                    prefix={
+                      <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                    }
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="用户名称"
+                  name="name"
+                  rules={[{ required: true, message: '请输入用户名称!' }]}
+                >
+                  <Input
+                    size="large"
+                    placeholder="请输入用户名称"
+                    allowClear
+                    prefix={
+                      <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+                    }
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="访问权限"
+                  name="auth"
+                  rules={[{ required: true, message: '请选择用户权限!' }]}
+                >
+                  <Checkbox.Group options={opt} />
+                </Form.Item>
+                <Form.Item className={s.fun}>
+                  <Button
+                    type="primary"
+                    className="input-btn"
+                    onClick={doCheckVaild}
+                    block
+                  >
+                    保存
+                  </Button>
+                  <Button
+                    type="cancel"
+                    className="input-btn"
+                    onClick={doClose}
+                    block
+                  >
+                    关闭
+                  </Button>
+                </Form.Item>
+              </Form>
+            </div>
+          </div>
+        )}
+      </div>
+    </Spin>
+  );
+};
 
-       {showForm && <FormMain {...{col, item, method, setRefresh, setShowForm, setLoading}}  />}
-
-      </Spin >
-    </div>
-  )
-
-}
-
-export default  observer(User)
+export default observer(User);

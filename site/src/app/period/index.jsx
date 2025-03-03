@@ -50,7 +50,7 @@ const Period = () => {
 
   useEffect(() => {
     store.qryEnergySummary(null).then(({ data }) => {
-      console.log(data, 'data');
+      // console.log(data, 'data');
 
       const cate_area = ['机电','电子三厂','电子二厂']
       const cate_dev  = ['冷冻机','冷冻泵','冷却泵','冷却塔']
@@ -159,7 +159,7 @@ const Period = () => {
 
   useEffect(() => {
     store.qryEnergyMonth(null).then(({ data }) => {
-      console.log(data, 'data month');
+      // console.log(data, 'data month');
       const cate = [];
       const seria = [{ name: '系统', data:[]  }]
       data.map(o=>{

@@ -20,7 +20,7 @@ class Store {
   async post(url, params) {
     const r = await post(url, params);
     // console.log(r,'aaaa')
-    if ((r.code === 0)|| (r.code === 200)) {
+    if (r.code === 0 || r.code === 200) {
       return r;
     } else {
       return null;
@@ -48,7 +48,6 @@ class Store {
       message.error(' 网络接口数据出错!');
     }
   }
-
 
   ///////////////////////////////////////////////////
   // ----------------- User API ------------------ //
@@ -99,14 +98,13 @@ class Store {
     return await this.post(urls.API_QRY_ENERGY_DEV_MONTH, params);
   }
 
-
   ///////////////////////////////////////////////////
   // ----------------- Report API ---------------  //
   ///////////////////////////////////////////////////
   async qryReportHistory(params) {
     return await this.post(urls.API_ANALYSIS_G0, params);
   }
-  
+
   async qryReportSummary(params) {
     return await this.post(urls.API_REPORT_SUMMARY, params);
   }
@@ -114,13 +112,41 @@ class Store {
   async saveDevices(params) {
     return await this.post(urls.API_SAVE_DEVICES, params);
   }
-  
+
   async loadDevices(params) {
     return await this.post(urls.API_LOAD_DEVICES, params);
   }
-  
 
-  
+  async qrySysData(params) {
+    return await this.post(urls.API_QRY_SYS_DATA, params);
+  }
+
+  async analysisG1(params) {
+    return await this.post(urls.API_ANALYSIS_G1, params);
+  }
+
+  async systemDataRun(params) {
+    return await this.post(urls.API_SYS_DATA_RUN, params);
+  }
+
+  ///////////////////////////////////////////////////
+  // ----------------- SYSTEM API ---------------- //
+  ///////////////////////////////////////////////////
+  async userList(params) {
+    return await this.post(urls.API_USER_LIST, params);
+  }
+
+  async userSave(params) {
+    return await this.post(urls.API_USER_SAVE, params);
+  }
+
+  async userDel(params) {
+    return await this.post(urls.API_USER_DEL, params);
+  }
+
+  ///////////////////////////////////////////////////
+  // ----------------- UPLOAD API ---------------  //
+  ///////////////////////////////////////////////////
 
   async upload(params) {
     try {
@@ -134,6 +160,10 @@ class Store {
       console.error('File upload error: ', error);
     }
   }
+
+  ///////////////////////////////////////////////////
+  // ----------------- WEATHER API ---------------  //
+  ///////////////////////////////////////////////////
 
   async weather(params) {
     const r = await get(urls.API_WEATHER, null);

@@ -1,49 +1,48 @@
 export const OptLineInit = (categories, series, title, unit) => {
-
   return {
     chart: {
       type: 'line',
       backgroundColor: 'transparent',
       style: {
-        color: '#FFFFFF',
-      },
+        color: '#FFFFFF'
+      }
     },
     title: {
       text: title,
       align: 'left',
       style: {
         color: '#9ca3d8',
-        fontSize: '15px',
-      },
+        fontSize: '15px'
+      }
     },
     yAxis: {
       title: {
         text: unit,
         style: {
           color: '#FFFFFF',
-          fontSize: '12px',
-        },
+          fontSize: '12px'
+        }
       },
       labels: {
         style: {
-          color: '#FFFFFF',
-        },
+          color: '#FFFFFF'
+        }
       },
       gridLineWidth: 1,
-      gridLineColor: 'rgba(255,255,255,.2)',
+      gridLineColor: 'rgba(255,255,255,.2)'
     },
     xAxis: {
       categories,
       labels: {
         style: {
-          color: '#FFFFFF',
-        },
+          color: '#FFFFFF'
+        }
       },
       lineColor: '#FFFFFF',
       tickColor: '#FFFFFF',
       gridLineWidth: 1,
       gridLineColor: 'rgba(255,255,255,.2)',
-      gridLineDashStyle: 'Dash',
+      gridLineDashStyle: 'Dash'
     },
     legend: {
       enabled: true,
@@ -55,16 +54,16 @@ export const OptLineInit = (categories, series, title, unit) => {
       layout: 'horizontal',
       itemStyle: {
         color: '#FFFFFF',
-        fontSize: '10px',
-      },
+        fontSize: '10px'
+      }
     },
     tooltip: {
       style: {
-        fontSize: '13px',
+        fontSize: '13px'
       },
       formatter: function () {
         return `<b>${this.series.name}</b> ${this.y} ${unit}`;
-      },
+      }
     },
     plotOptions: {
       line: {
@@ -74,26 +73,31 @@ export const OptLineInit = (categories, series, title, unit) => {
           fillColor: '#FFFFFF',
           lineWidth: 2,
           lineColor: null,
-          symbol: 'circle',
+          symbol: 'circle'
         },
         events: {
           // 动态调整 Y 轴最大值
           legendItemClick: function () {
             const chart = this.chart;
             // 获取当前可见的系列
-            const visibleSeries = chart.series.filter((s) => s.visible);
+            const visibleSeries = chart.series.filter(s => s.visible);
             // 重新计算可见系列的最大值
-            const visibleDataPoints = visibleSeries.flatMap((s) => s.data.map((point) => point.y));
+            const visibleDataPoints = visibleSeries.flatMap(s =>
+              s.data.map(point => point.y)
+            );
             const newMaxValue = Math.max(...visibleDataPoints);
             // 更新 Y 轴的最大值
             chart.yAxis[0].update({
-              max: newMaxValue + 2, // 增加一些缓冲空间
+              max: newMaxValue + 2 // 增加一些缓冲空间
             });
             return true; // 允许默认的图例点击行为
-          },
-        },
-      },
+          }
+        }
+      }
     },
-    series,
+    exporting: {
+      enabled: false // 直接关闭导出功能（按钮和菜单均隐藏）
+    },
+    series
   };
 };

@@ -1,8 +1,4 @@
 export const OptLineInit = (categories, series, title, unit) => {
-  const allDataPoints = series.flatMap(item => item.data);
-  const maxValue = Math.max(...allDataPoints);
-  const minValue = Math.min(...allDataPoints);
-
   return {
     chart: {
       type: 'line',
@@ -13,15 +9,17 @@ export const OptLineInit = (categories, series, title, unit) => {
     },
     title: {
       text: title,
-      align: 'left',
+      align: 'right',
+      margin: 10,
+      verticalAlign: 'top',
       style: {
-        color: '#9ca3d8',
-        fontSize: '15px'
+        color: '#fff',
+        fontSize: '12px'
       }
     },
     yAxis: {
       title: {
-        text: unit,
+        text: null,
         style: {
           color: '#FFFFFF',
           fontSize: '12px'
@@ -33,13 +31,14 @@ export const OptLineInit = (categories, series, title, unit) => {
         }
       },
       gridLineWidth: 1,
-      gridLineColor: 'rgba(255,255,255,.2)',
-      max: maxValue + 2,
-      min: minValue
+      gridLineColor: 'rgba(255,255,255,.2)'
+      // max: maxValue + 2,
+      // min: minValue,
     },
     xAxis: {
       categories,
       labels: {
+        enabled: false,
         style: {
           color: '#FFFFFF'
         }
@@ -51,7 +50,7 @@ export const OptLineInit = (categories, series, title, unit) => {
       gridLineDashStyle: 'Dash'
     },
     legend: {
-      enabled: true,
+      enabled: false,
       floating: true,
       align: 'right',
       verticalAlign: 'top',
@@ -74,8 +73,8 @@ export const OptLineInit = (categories, series, title, unit) => {
     plotOptions: {
       line: {
         marker: {
-          enabled: true,
-          radius: 3,
+          // enabled: true,
+          // radius: 3,
           fillColor: '#FFFFFF',
           lineWidth: 2,
           lineColor: null,
